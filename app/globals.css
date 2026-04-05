@@ -1,26 +1,39 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+html {
+  scroll-behavior: smooth;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-display);
   --font-mono: var(--font-geist-mono);
+  --color-destructive-foreground: var(--destructive-foreground);
+  /* Warm cream token used throughout the site */
+  --color-cream: oklch(0.93 0.022 75);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+:root {
+  --background: oklch(0.1 0.03 60);
+  --foreground: oklch(0.93 0.04 80);
+  --card: oklch(0.15 0.04 60 / 0.15);
+  --card-foreground: oklch(0.93 0.04 80);
+  --popover: oklch(0.1 0.03 60 / 0.85);
+  --popover-foreground: oklch(0.93 0.04 80);
+  --primary: oklch(0.85 0.15 55);
+  --primary-foreground: oklch(0.1 0.03 60);
+  --secondary: oklch(0.45 0.1 55);
+  --secondary-foreground: oklch(0.93 0.04 80);
+  --muted: oklch(0.93 0.04 80 / 0.5);
+  --muted-foreground: oklch(0.65 0.04 70);
+  --accent: oklch(0.55 0.12 60);
+  --accent-foreground: oklch(0.93 0.04 80);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.93 0.04 80);
+  --border: oklch(0.93 0.04 80 / 0.15);
+  --input: oklch(0.93 0.04 80 / 0.08);
+  --ring: oklch(0.93 0.04 80 / 0.25);
+  --radius: 0.5rem;
+  --font-geist-sans: "Geist Sans", sans-serif;
+  --font-geist-mono: "Geist Mono", monospace;
 }
