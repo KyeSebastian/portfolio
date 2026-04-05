@@ -1,25 +1,54 @@
+"use client"
+
+import { StackedCardsInteraction, type ProjectCardData } from "@/components/ui/stacked-cards-interaction"
+
 const BG = "#141008"
 
 // ─── Work ────────────────────────────────────────────────────────────────────
 
-const projects = [
+const projects: ProjectCardData[] = [
   {
-    name: "Project One",
-    category: "Design & Development",
-    year: "2024",
+    title:       "Project One",
+    category:    "Full Stack",
+    year:        "2024",
     description: "A brief one-line description of what this project was and why it mattered.",
+    image:       "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop&q=60",
+    githubUrl:   "https://github.com/KyeSebastian",
   },
   {
-    name: "Project Two",
-    category: "Full Stack",
-    year: "2024",
+    title:       "Project Two",
+    category:    "Design & Development",
+    year:        "2024",
     description: "A brief one-line description of what this project was and why it mattered.",
+    image:       "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=60",
+    githubUrl:   "https://github.com/KyeSebastian",
   },
   {
-    name: "Project Three",
-    category: "Creative Direction",
-    year: "2023",
+    title:       "Project Three",
+    category:    "Creative Direction",
+    year:        "2023",
     description: "A brief one-line description of what this project was and why it mattered.",
+    image:       "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&auto=format&fit=crop&q=60",
+    liveUrl:     "https://kyemora.com",
+  },
+]
+
+const stack: { category: string; items: string[] }[] = [
+  {
+    category: "Frontend",
+    items: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
+  },
+  {
+    category: "Backend",
+    items: ["Node.js", "Express", "PostgreSQL", "REST APIs"],
+  },
+  {
+    category: "Tooling",
+    items: ["Git", "Figma", "VS Code", "Vercel"],
+  },
+  {
+    category: "Learning",
+    items: ["Three.js", "Python", "AWS"],
   },
 ]
 
@@ -27,35 +56,56 @@ export function WorkSection() {
   return (
     <section
       id="work"
-      style={{ backgroundColor: BG }}
+      style={{ backgroundColor: "rgba(20,16,8,0.55)" }}
       className="px-10 sm:px-20 py-40"
     >
-      <p className="font-mono text-xs tracking-widest text-cream/25 uppercase mb-20">
-        Selected Work
-      </p>
+      {/* Two-column layout */}
+      <div className="flex flex-col lg:flex-row gap-20 lg:gap-0">
 
-      <div className="flex flex-col">
-        {projects.map((p, i) => (
-          <div
-            key={i}
-            className="group flex flex-col sm:flex-row sm:items-baseline justify-between py-10 border-t border-cream/8 cursor-pointer"
-          >
-            <div className="flex flex-col gap-2">
-              <h2 className="text-3xl sm:text-4xl font-light text-cream/80 group-hover:text-cream/95 transition-colors duration-500">
-                {p.name}
-              </h2>
-              <p className="font-mono text-xs tracking-widest text-cream/30 uppercase">
-                {p.category}
-              </p>
-            </div>
-            <div className="mt-4 sm:mt-0 sm:max-w-xs sm:text-right">
-              <p className="text-sm text-cream/35 leading-relaxed">{p.description}</p>
-              <p className="font-mono text-xs text-cream/20 mt-2">{p.year}</p>
-            </div>
+        {/* Left — project cards */}
+        <div className="flex-1 flex flex-col">
+          <p className="font-mono text-xs tracking-widest text-cream/25 uppercase mb-3">
+            Selected Work
+          </p>
+          <p className="text-2xl font-light text-cream/35 mb-8">
+            Hover to explore
+          </p>
+          <StackedCardsInteraction cards={projects} />
+        </div>
+
+        {/* Divider */}
+        <div className="hidden lg:block w-px bg-cream/5 mx-16 self-stretch" />
+
+        {/* Right — tech stack */}
+        <div className="flex-1 flex flex-col">
+          <p className="font-mono text-xs tracking-widest text-cream/25 uppercase mb-3">
+            Tech Stack
+          </p>
+          <p className="text-2xl font-light text-cream/35 mb-12">
+            Tools I reach for without thinking twice
+          </p>
+
+          <div className="flex flex-col gap-8">
+            {stack.map((group) => (
+              <div key={group.category}>
+                <p className="font-mono text-xs tracking-widest text-cream/20 uppercase mb-4">
+                  {group.category}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {group.items.map((item) => (
+                    <span
+                      key={item}
+                      className="px-3 py-1.5 text-xs font-mono text-cream/45 border border-cream/10 hover:border-cream/25 hover:text-cream/65 transition-all duration-300 cursor-default"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-        {/* closing border */}
-        <div className="border-t border-cream/8" />
+        </div>
+
       </div>
     </section>
   )
@@ -69,7 +119,7 @@ export function AboutSection() {
   return (
     <section
       id="about"
-      style={{ backgroundColor: BG }}
+      style={{ backgroundColor: "rgba(20,16,8,0.55)" }}
       className="px-10 sm:px-20 py-40 border-t border-cream/5"
     >
       <p className="font-mono text-xs tracking-widest text-cream/25 uppercase mb-20">
@@ -108,7 +158,7 @@ export function ContactSection() {
   return (
     <section
       id="contact"
-      style={{ backgroundColor: BG }}
+      style={{ backgroundColor: "rgba(20,16,8,0.55)" }}
       className="px-10 sm:px-20 py-40 border-t border-cream/5"
     >
       <p className="font-mono text-xs tracking-widest text-cream/25 uppercase mb-20">
@@ -123,7 +173,7 @@ export function ContactSection() {
           hello@kyemora.com
         </a>
 
-        <div className="flex items-center gap-8">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-8">
           <a
             href="https://github.com/KyeMora"
             target="_blank"
@@ -144,6 +194,23 @@ export function ContactSection() {
           >
             Twitter
           </a>
+
+          {/* CV Download */}
+          <a
+            href="/cv.pdf"
+            download
+            className="group flex items-center gap-3 border border-cream/15 hover:border-cream/35 px-5 py-2.5 transition-colors duration-300 w-fit"
+          >
+            <span className="font-mono text-xs tracking-widest text-cream/40 group-hover:text-cream/70 uppercase transition-colors duration-300">
+              Download CV
+            </span>
+            <svg
+              width="10" height="12" viewBox="0 0 10 12" fill="none"
+              className="text-cream/30 group-hover:text-cream/60 transition-colors duration-300"
+            >
+              <path d="M5 0v8M1 5l4 4 4-4M0 11h10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </a>
         </div>
       </div>
     </section>
@@ -155,7 +222,7 @@ export function ContactSection() {
 export function Footer() {
   return (
     <footer
-      style={{ backgroundColor: BG }}
+      style={{ backgroundColor: "rgba(20,16,8,0.55)" }}
       className="px-10 sm:px-20 py-12 border-t border-cream/5 flex items-center justify-between"
     >
       <span className="font-mono text-xs text-cream/20 tracking-widest uppercase">

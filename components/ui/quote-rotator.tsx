@@ -85,7 +85,7 @@ export function QuoteRotator() {
           per="word"
           variants={blurSlideVariants}
           trigger={trigger}
-          className="text-4xl sm:text-5xl font-light leading-snug tracking-tight text-cream/80"
+          className="text-4xl sm:text-5xl font-light leading-snug tracking-tight text-cream/55"
         >
           {QUOTES[index].text}
         </TextEffect>
