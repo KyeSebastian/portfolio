@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useCallback, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { MeshGradient } from "@paper-design/shaders-react"
 import { TextScramble } from "@/components/ui/text-scramble"
 import { QuoteRotator } from "@/components/ui/quote-rotator"
 
@@ -64,19 +63,21 @@ function FadeOverlay({ phase, onClosed }: { phase: Phase; onClosed: () => void }
 // ── Landing page ─────────────────────────────────────────────────────────────
 export default function LandingPage() {
   const [phase, setPhase] = useState<Phase>("idle")
+  const hasUnlocked = useRef(false)
 
   const unlock = useCallback(() => {
+    hasUnlocked.current = true
     document.documentElement.style.overflow = ""
     document.body.style.overflow = ""
   }, [])
 
-  // Scroll gate — lock body scroll while at hero
+  // Scroll gate — lock body scroll while at hero, permanently release after first "View Work"
   useEffect(() => {
     document.documentElement.style.overflow = "hidden"
     document.body.style.overflow = "hidden"
 
     const onScroll = () => {
-      if (window.scrollY === 0) {
+      if (!hasUnlocked.current && window.scrollY === 0) {
         document.documentElement.style.overflow = "hidden"
         document.body.style.overflow = "hidden"
       }
@@ -121,13 +122,7 @@ export default function LandingPage() {
         onClosed={handleClosed}
       />
 
-      <div className="w-full h-screen relative overflow-hidden" style={{ backgroundColor: "#141008" }}>
-        <MeshGradient
-          className="w-full h-full absolute inset-0"
-          colors={["#141008", "#2a1f14", "#4a3828", "#e8ddd0"]}
-          speed={0.5}
-        />
-
+      <div className="w-full h-screen relative overflow-hidden">
         <SpotlightCursor />
 
         {/* Top-left name */}
@@ -180,7 +175,7 @@ export default function LandingPage() {
         {/* Fade into next section */}
         <div
           className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none"
-          style={{ background: "linear-gradient(to bottom, transparent, #141008)" }}
+          style={{ background: "linear-gradient(to bottom, transparent, rgba(20,16,8,0.6))" }}
         />
       </div>
     </>

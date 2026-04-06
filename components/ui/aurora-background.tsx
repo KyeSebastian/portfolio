@@ -67,11 +67,10 @@ const AuroraShader = () => {
           float aurora = (flow1 + flow2 + flow3) * 0.33 + 0.5;
           aurora = pow(aurora, 2.2);
 
-          // ── Warm dark palette ─────────────────────────────────────────────
+          // ── Landing page palette ───────────────────────────────────────────
           vec3 deepEspresso = vec3(0.078, 0.063, 0.031); // #141008
           vec3 darkBrown    = vec3(0.165, 0.122, 0.078); // #2a1f14
           vec3 caramel      = vec3(0.290, 0.220, 0.157); // #4a3828
-          vec3 amber        = vec3(0.720, 0.490, 0.180); // warm gold
           vec3 cream        = vec3(0.910, 0.867, 0.816); // #e8ddd0
 
           vec3 color = deepEspresso;
@@ -82,10 +81,7 @@ const AuroraShader = () => {
           float caramelFlow = smoothstep(0.45, 0.75, aurora + flow1 * 0.4);
           color = mix(color, caramel, caramelFlow * 0.9);
 
-          float amberFlow = smoothstep(0.62, 0.88, aurora + flow2 * 0.35);
-          color = mix(color, amber, amberFlow * 0.55);
-
-          float creamFlow = smoothstep(0.80, 0.97, streaks + aurora * 0.5);
+          float creamFlow = smoothstep(0.72, 0.97, streaks + aurora * 0.5);
           color = mix(color, cream, creamFlow * 0.18);
 
           float noise = snoise(uv * 80.0) * 0.012;
