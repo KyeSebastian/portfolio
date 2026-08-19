@@ -10,4 +10,4 @@ error journal appendix for every mistake made along the way.
 - Tailwind CSS 4
 - Framer Motion for animation
 - `@paper-design/shaders-react` for the mesh gradient background
-- MDX/remark/rehype + gray-matter for the markdown-driven blog
+- remark/rehype for the markdown-driven blog

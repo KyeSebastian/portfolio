@@ -7,7 +7,6 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ["192.168.1.152"],
   images: {
     remotePatterns: [
-      { protocol: "https", hostname: "picsum.photos" },
       { protocol: "https", hostname: "images.unsplash.com" },
     ],
   },
