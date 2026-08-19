@@ -1,10 +1,13 @@
 # Portfolio
 
-My personal portfolio site.
+My personal portfolio site: a landing page, project showcase, and a
+markdown-driven blog documenting my home lab build, with a linked
+error journal appendix for every mistake made along the way.
 
 ## Stack
 
-- Next.js, TypeScript, Tailwind CSS
+- Next.js 16 (App Router), React 19, TypeScript
+- Tailwind CSS 4
 - Framer Motion for animation
 - `@paper-design/shaders-react` for the mesh gradient background
-- Markdown-driven blog (home lab build logs + error journal)
+- MDX/remark/rehype + gray-matter for the markdown-driven blog
