@@ -10,8 +10,8 @@ export default function Home() {
         <section id="hero">
           <LandingPage />
         </section>
-        <AboutSection />
         <WorkSection />
+        <AboutSection />
         <ContactSection />
         <Footer />
       </main>

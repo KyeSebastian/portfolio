@@ -8,6 +8,7 @@ interface TextScrambleProps {
   text: string
   className?: string
   resolvedClassName?: string
+  scrambleClassName?: string
   autoStart?: boolean
   autoStartDelay?: number
   loop?: boolean
@@ -18,6 +19,7 @@ export function TextScramble({
   text,
   className = "",
   resolvedClassName = "text-foreground",
+  scrambleClassName = "font-mono tracking-widest uppercase",
   autoStart = false,
   autoStartDelay = 400,
   loop = false,
@@ -92,12 +94,12 @@ export function TextScramble({
   }
 
   return (
-    <div
+    <span
       className={`group relative inline-flex flex-col cursor-pointer select-none ${className}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <span className="relative font-mono tracking-widest uppercase">
+      <span className={`relative ${scrambleClassName}`}>
         {(displayText || text).split("").map((char, i) => (
           <span
             key={i}
@@ -106,12 +108,12 @@ export function TextScramble({
             }`}
             style={{ transitionDelay: `${i * 10}ms` }}
           >
-            {char}
+            {char === " " ? "\u00A0" : char}
           </span>
         ))}
       </span>
 
-      {/* Animated underline — only shown on hover-interactive instances */}
+      {/* Animated underline, only shown on hover-interactive instances */}
       {!autoStart && (
         <span className="relative h-px w-full mt-2 overflow-hidden">
           <span
@@ -123,7 +125,7 @@ export function TextScramble({
         </span>
       )}
 
-      {/* Subtle glow on hover — only on interactive instances */}
+      {/* Subtle glow on hover, only on interactive instances */}
       {!autoStart && (
         <span
           className={`absolute -inset-4 rounded-lg bg-primary/5 transition-opacity duration-300 -z-10 ${
@@ -131,6 +133,6 @@ export function TextScramble({
           }`}
         />
       )}
-    </div>
+    </span>
   )
 }

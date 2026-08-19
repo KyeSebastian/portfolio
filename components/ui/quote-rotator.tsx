@@ -3,23 +3,21 @@
 import { useState, useEffect } from "react"
 import { TextEffect } from "@/components/ui/text-effect"
 
-// ── Swap these for your own quotes ──────────────────────────────────────────
+// Swap these for your own quotes
 const QUOTES = [
   { text: "Can you stay true to what you said you're gonna do, long after the mood you said it in is gone?" },
-  { text: "Quiet the mind and listen to your higher self" },
   { text: "Change can take place in an instant if you are willing to flip the switch" },
   { text: "You are only responsible for the effort not the outcome" },
-  { text: "If your worth more, get more" },
-  { text: "Don't spend another year doing the same shit" },
+  { text: "If you're worth more, get more" },
   { text: "Nothing changes if nothing changes" },
-  { text: "My greatest fear was believing in myself" },
   { text: "Success is not driven by anything other than consistency" },
   { text: "Never make the same mistake twice" },
   { text: "Be more interested than interesting" },
   { text: "One percent better every day" },
-  { text: "You reap what you sow" },
+  { text: "The way you speak to yourself matters" },
+  { text: "The mindset you carry shapes the life you create" },
+  { text: "Growth comes with learning to be uncomfortable" },
 ]
-// ────────────────────────────────────────────────────────────────────────────
 
 const INTERVAL_MS = 8000
 
@@ -78,14 +76,14 @@ export function QuoteRotator() {
       {/* Quote */}
       <div
         onClick={() => advance()}
-        className="cursor-pointer select-none min-h-[6rem] flex items-center justify-center"
+        className="cursor-pointer select-none min-h-[10rem] sm:min-h-[6rem] flex items-center justify-center"
         title="Click for next quote"
       >
         <TextEffect
           per="word"
           variants={blurSlideVariants}
           trigger={trigger}
-          className="text-4xl sm:text-5xl font-light leading-snug tracking-tight text-cream/55"
+          className="text-2xl sm:text-4xl lg:text-5xl font-light leading-snug tracking-tight text-cream/55"
         >
           {QUOTES[index].text}
         </TextEffect>

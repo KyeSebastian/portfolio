@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@plugin "@tailwindcss/typography";
 
 html {
   scroll-behavior: smooth;
@@ -11,6 +12,18 @@ html {
   --color-destructive-foreground: var(--destructive-foreground);
   /* Warm cream token used throughout the site */
   --color-cream: oklch(0.93 0.022 75);
+}
+
+/* Error Journal cross-links get a classic blue+underline treatment,
+   deliberately distinct from the prose's normal cream-toned links, so a
+   reader instantly recognizes "this one goes to a real mistake and its fix." */
+.prose a[href*="/errors#"] {
+  color: #60a5fa;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose a[href*="/errors#"]:hover {
+  color: #93c5fd;
 }
 
 :root {

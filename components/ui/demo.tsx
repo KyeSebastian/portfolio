@@ -4,8 +4,9 @@ import { useEffect, useRef, useCallback, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { TextScramble } from "@/components/ui/text-scramble"
 import { QuoteRotator } from "@/components/ui/quote-rotator"
+import SiteNav from "@/components/ui/site-nav"
 
-// ── Spotlight ────────────────────────────────────────────────────────────────
+// Spotlight
 function SpotlightCursor() {
   const spotRef = useRef<HTMLDivElement>(null)
   const mouse   = useRef({ x: -1000, y: -1000 })
@@ -20,7 +21,7 @@ function SpotlightCursor() {
       pos.current.x += (mouse.current.x - pos.current.x) * 0.08
       pos.current.y += (mouse.current.y - pos.current.y) * 0.08
       if (spotRef.current)
-        spotRef.current.style.background = `radial-gradient(600px circle at ${pos.current.x}px ${pos.current.y}px, rgba(220,205,185,0.07) 0%, rgba(190,175,155,0.03) 40%, transparent 70%)`
+        spotRef.current.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y}px, 0)`
       raf.current = requestAnimationFrame(loop)
     }
     raf.current = requestAnimationFrame(loop)
@@ -31,13 +32,26 @@ function SpotlightCursor() {
     }
   }, [])
 
-  return <div ref={spotRef} className="absolute inset-0 pointer-events-none" />
+  return (
+    <div
+      ref={spotRef}
+      className="absolute pointer-events-none"
+      style={{
+        width:      "600px",
+        height:     "600px",
+        top:        "-300px",
+        left:       "-300px",
+        background: "radial-gradient(circle, rgba(220,205,185,0.07) 0%, rgba(190,175,155,0.03) 40%, transparent 70%)",
+        willChange: "transform",
+      }}
+    />
+  )
 }
 
-// ── Fade transition overlay ───────────────────────────────────────────────────
+// Fade transition overlay
 type Phase = "idle" | "closing" | "opening"
 
-function FadeOverlay({ phase, onClosed }: { phase: Phase; onClosed: () => void }) {
+function FadeOverlay({ phase, onClosed, onOpened }: { phase: Phase; onClosed: () => void; onOpened: () => void }) {
   const show = phase !== "idle"
 
   return (
@@ -53,123 +67,104 @@ function FadeOverlay({ phase, onClosed }: { phase: Phase; onClosed: () => void }
             duration: phase === "closing" ? 0.5 : 0.6,
             ease: phase === "closing" ? [0.4, 0, 1, 1] : [0, 0, 0.2, 1],
           }}
-          onAnimationComplete={() => { if (phase === "closing") onClosed() }}
+          onAnimationComplete={() => {
+            if (phase === "closing") onClosed()
+            else if (phase === "opening") onOpened()
+          }}
         />
       )}
     </AnimatePresence>
   )
 }
 
-// ── Landing page ─────────────────────────────────────────────────────────────
+// Landing page
 export default function LandingPage() {
   const [phase, setPhase] = useState<Phase>("idle")
-  const hasUnlocked = useRef(false)
+  const heroRef = useRef<HTMLDivElement>(null)
+  const unlockedRef = useRef(false)
+  const targetSection = useRef<string>("work")
+
+  // Block wheel/touch scroll on the hero div only, does NOT touch body/html overflow
+  useEffect(() => {
+    const hero = heroRef.current
+    if (!hero) return
+
+    const blockWheel = (e: WheelEvent) => {
+      if (!unlockedRef.current) e.preventDefault()
+    }
+    const blockTouch = (e: TouchEvent) => {
+      if (!unlockedRef.current) e.preventDefault()
+    }
+
+    hero.addEventListener("wheel", blockWheel, { passive: false })
+    hero.addEventListener("touchmove", blockTouch, { passive: false })
+    return () => {
+      hero.removeEventListener("wheel", blockWheel)
+      hero.removeEventListener("touchmove", blockTouch)
+    }
+  }, [])
 
   const unlock = useCallback(() => {
-    hasUnlocked.current = true
-    document.documentElement.style.overflow = ""
-    document.body.style.overflow = ""
+    unlockedRef.current = true
   }, [])
 
-  // Scroll gate — lock body scroll while at hero, permanently release after first "View Work"
-  useEffect(() => {
-    document.documentElement.style.overflow = "hidden"
-    document.body.style.overflow = "hidden"
-
-    const onScroll = () => {
-      if (!hasUnlocked.current && window.scrollY === 0) {
-        document.documentElement.style.overflow = "hidden"
-        document.body.style.overflow = "hidden"
-      }
-    }
-    window.addEventListener("scroll", onScroll)
-    return () => {
-      document.documentElement.style.overflow = ""
-      document.body.style.overflow = ""
-      window.removeEventListener("scroll", onScroll)
-    }
-  }, [])
-
-  // View Work — trigger split, scroll, then open
-  const handleViewWork = useCallback(() => {
+  // Fade + scroll to a section
+  const fadeNavigate = useCallback((sectionId: string) => {
     if (phase !== "idle") return
+    targetSection.current = sectionId
     unlock()
     setPhase("closing")
   }, [phase, unlock])
 
-  // Called when panels have fully closed (meeting in middle)
   const handleClosed = useCallback(() => {
-    // Instant scroll while screen is covered
-    document.getElementById("work")?.scrollIntoView({ behavior: "instant" as ScrollBehavior })
-    // Brief pause so scroll settles, then open the curtain
+    document.getElementById(targetSection.current)?.scrollIntoView({ behavior: "instant" as ScrollBehavior })
     setTimeout(() => setPhase("opening"), 80)
   }, [])
 
-  // After opening animation finishes, reset
-  const handleOpened = useCallback(() => {
-    setPhase("idle")
+  // Direct scroll, no fade, no body lock to fight
+  const scrollTo = useCallback((id: string) => {
+    unlockedRef.current = true
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
   }, [])
-
-  const navigateTo = useCallback((id: string) => {
-    unlock()
-    setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }), 10)
-  }, [unlock])
 
   return (
     <>
       <FadeOverlay
         phase={phase}
         onClosed={handleClosed}
+        onOpened={() => setPhase("idle")}
       />
 
-      <div className="w-full h-screen relative overflow-hidden">
+      <div ref={heroRef} className="w-full h-[100dvh] relative overflow-hidden">
         <SpotlightCursor />
+        <SiteNav onNavigate={unlock} />
 
-        {/* Top-left name */}
-        <div className="absolute top-8 left-10 pointer-events-none">
-          <TextScramble
-            text="Kye Mora"
-            autoStart
-            autoStartDelay={600}
-            loop
-            loopDelay={3000}
-            resolvedClassName="text-cream/55"
-            className="text-xs"
-          />
+        {/* Top-center: name + title */}
+        <div className="absolute top-20 sm:top-8 left-0 right-0 flex flex-col items-center gap-2 sm:gap-3 px-8">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-sans font-light tracking-tight text-cream/90">
+            Kye Mora
+          </h1>
+          <span className="font-mono text-[9px] sm:text-[10px] tracking-widest uppercase text-white text-center">
+            CS grad, Security+ certified, aspiring network engineer
+          </span>
         </div>
 
-        {/* Top-right nav */}
-        <nav className="absolute top-8 right-10 flex items-center gap-8">
-          {["About", "Blog", "Contact"].map((label) => (
-            <button key={label} onClick={() => navigateTo(label.toLowerCase())}>
+        {/* Center: quotes + CTA */}
+        <div className="absolute inset-0 flex items-center justify-center px-8">
+          <div className="flex flex-col items-center gap-12">
+            <QuoteRotator />
+            <button onClick={() => fadeNavigate("work")} className="cursor-pointer">
               <TextScramble
-                text={label}
+                text="View Work"
                 autoStart
                 autoStartDelay={600}
                 loop
                 loopDelay={3000}
                 resolvedClassName="text-cream/55"
-                className="text-xs"
+                className="text-sm"
               />
             </button>
-          ))}
-        </nav>
-
-        {/* Center — quotes + CTA */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="flex flex-col items-center gap-12">
-            <QuoteRotator />
-            <button onClick={handleViewWork}>
-              <TextScramble text="View Work" resolvedClassName="text-cream/55" />
-            </button>
           </div>
-        </div>
-
-        {/* Bottom-left descriptor */}
-        <div className="absolute bottom-8 left-10 pointer-events-none">
-          <span className="font-mono text-xs tracking-widest text-cream/25 uppercase">
-            Creative Developer
-          </span>
         </div>
 
         {/* Fade into next section */}
